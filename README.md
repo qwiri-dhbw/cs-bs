@@ -476,21 +476,22 @@ Dann muss der vollständige neue Adressraum gebildet werden, bzw. bildet er sich
 
 > Warum wird bei Linux und Windows der Anwendungsadressraum von 4GB auf 3GB (Windows 2GB) verkleinert?
 
-* Ein Teil des Adressraums wird für das Betriebssystem reserviert, um den Kernel und seine Funktionen zu laden und auszuführen.
-* Speicherplatz für Abbildung von Systemressourcen wie Treiber wird benötigt.
-* Reduzierung des Anwendungsadressraums ermöglicht effizientere Speichernutzung und erhöht die Stabilität des Systems.
+* Platz für das Betriebssystem im reservierten Adressraum
+* Linux reserviert 1GB, Windows 2-3GB für das Betriebssystem
+* Diese Reduzierung ermöglicht es, dass das Betriebssystem und die Anwendungen beide Adressräume gleichzeitig sichtbar haben. Bei 64-Bit-CPUs ist diese Einschränkung nicht erforderlich.
 
 > Welche Vorteile hat diese Maßnahme bei einem Systemcall
 
-* Bei einem Systemcall muss der Prozess vom Benutzermodus in den privilegierten Kernelmodus wechseln.
-* Durch die Verkleinerung des Anwendungsadressraums bleibt mehr Speicherplatz für den Kernel und die Systemfunktionen verfügbar, was den Systemcall effizienter macht.
-* Es wird weniger Speicher für den Kontextwechsel zwischen Benutzermodus und Kernelmodus benötigt, wodurch die Ausführung des Systemcalls beschleunigt wird.
+* Direkter Zugriff des Betriebssystems auf virtuelle Adressen der Anwendung
+* Keine Umrechnung der Adressen erforderlich
+* Kein Wechsel zwischen Adressräumen
+* Vermeidung von TLB- und Cache-Invalidierungen
+* Beschleunigung der Systemaufrufe
 
 > Welche Vorteile hat diese Maßnahme beim Datentransfer
 
-* Beim Datentransfer zwischen Prozessen oder zwischen Prozess und Betriebssystem wird Speicherplatz benötigt, um die Daten zu kopieren.
-* Durch die Verkleinerung des Anwendungsadressraums steht mehr Speicherplatz für den Datentransfer zur Verfügung.
-* Dies ermöglicht eine effizientere Datenübertragung, da weniger Kopiervorgänge und weniger Speicherbelegung erforderlich sind.
+* Das Betriebssystem kann beim Zugriff auf Anwendungsdaten die virtuellen Adressen (Pointer) verwenden ohne sie umzurechnen, oder zwischen verschiedenen Adressraeumen umschalten zu muessen
+* Auch TLB und der Cache muessen beim Eintritt ins Betriebssystem nicht invalidiert werden
 
 ---
 
@@ -661,7 +662,7 @@ Ein "Seitenfehler" (auch bekannt als Page Fault) tritt auf, wenn ein Prozess auf
 
 MMU-VM
 
-> Welche Eigenschaften muss ein Peripheriegerät vorweisen, um IO-Virtualisierung zu unterstützen?
+> Welche Eigenschaften muss ein Peripheriegerät vorweisen, um I/O-Virtualisierung zu unterstützen?
 
 ` 🚨 answer missing `
 
