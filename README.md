@@ -25,7 +25,7 @@ In der Page-Tabelle sind die Real-Pages drinnen, aus denen anhand des Offsets di
 > Wie viele Speicher und wie viele Tabellen braucht man mindestens für die Speichertabellen (PD, PT)
 > eines kleinen Programms (mit Code, Date, Heap und Stack)?
 
-ANSWER
+` 🚨 answer missing `
 
 > Wozu dient der TLB?
 
@@ -37,7 +37,7 @@ Wenn die Übersetzung jedoch nicht im TLB vorhanden ist (ein sogenannter TLB-Mis
  
 > Für welche Bereiche des virtuellen Adressraums werden diese benötigt?
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
@@ -49,12 +49,12 @@ Bei 4MB Seiten wird dem Offset 22 Bit zugeteilt und der Page 10 Bit anstatt bei 
 
 > Wie "berechnet" die MMU dabei die reelle Adresse (Zeichnung)?
 
-ANSWER
+` 🚨 answer missing `
 
 
 > Wie wird durch die virtuelle Adressierung verhindert, dass Programme auf fremden Adressraum zugreifen?
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
@@ -62,11 +62,11 @@ ANSWER
 > 
 > Beschreiben Sie, wie die reelle Adresse gebildet wird
 
-ANSWER
+` 🚨 answer missing `
 
 > Wie groß sind die Register?
 
-ANSWER
+` 🚨 answer missing `
 
 > (Hilfe) Warum ist diese Tabellengröße gewählt? Was kann man tun, um größere Seiten hinzubekommen?
 
@@ -76,7 +76,7 @@ Um groessere Seiten hinzubekommen muss man den Offset vergroessern. Fuer 4MB Sei
 
 > Beschreiben Sie die Funktionsweise der virtuellen Adressierung eines 32-Bit-Prozessors mit einer Seitengröße von 4MB
 
-ANSWER
+` 🚨 answer missing `
 
 > Wie vermeidet man, dass bei jeder Speicheradressierung die vollständige Adressumsetzung erfolgen muss?
 
@@ -126,43 +126,43 @@ Bei der mehrstufigen virtuellen Adressierung wird die virtuelle Adresse in mehre
 
 > Funktionsweise ext4
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
 > Funktionsweise ext2
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
 > Funktionsweise FAT
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
 > [ext4] Beschreiben Sie den Aufbau des Dateisystems `ext4`
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
 > [ext4] Beschreiben Sie die Funktionsweise des ext4-Dateisystems mit Extents
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
 > [ext4] Warum kann ext4 mit Extents größere Partitionen verwalten als ohne Extents
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
 > [ext4] Wie groß kann eine Datei werden (Blockgröße 4kB, Rechenweg)
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
@@ -180,7 +180,7 @@ Max. Groesse = Direkte * BS + Anzahl Eintraege indirekte Bloecke * BS + Anzahl E
 
 > Wie kann man aus den Einträgen erkennen, in welchen Blöcken die Daten gespeichert sind (Zeichnung)? 
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
@@ -434,15 +434,15 @@ Memory Mapped Files sind eine Technik zur Abbildung von Dateien in den Arbeitssp
 
 > Warum führt `copy_on_write` zur beschleunigten Ausführung eines child-Prozesses nach `fork()`
 
-ANSWER
+` 🚨 answer missing `
 
 > Was geschieht, wenn einer der Prozesse eine Globalvariable modifiziert?
 
-ANSWER
+` 🚨 answer missing `
 
 > Was geschieht bei einem Unterprogrammaufruf?
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
@@ -450,11 +450,11 @@ ANSWER
 >
 > Was geschieht bei `fork()`?
 
-ANSWER
+` 🚨 answer missing `
 
 > Was geschieht danach beim Ausführen von `exec()`?
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
@@ -647,7 +647,7 @@ MMU-VM
 
 > Welche Eigenschaften muss ein Peripheriegerät vorweisen, um IO-Virtualisierung zu unterstützen?
 
-ANSWER
+` 🚨 answer missing `
 
 ---
 
