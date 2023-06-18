@@ -488,10 +488,6 @@ Memory Mapped Files sind eine Technik zur Abbildung von Dateien in den Arbeitssp
 
 Die beschleunigte Ausführung eines Child-Prozesses nach `fork()` wird durch die Copy-on-Write-Strategie ermöglicht. Dabei greifen beide Prozesse über ihre Pagetable, es gibt zwei, auf den gleichen Anwendungsadressraum zu. Die Einträge in der Pagetable sind schreibgeschützt (W = 0). Wenn einer der Prozesse schreiben möchte, wird eine Exception ausgelöst, woraufhin die Page kopiert und der Schreibschutz der entsprechenden Eintraegen der Pagetable entfernt wird. Dadurch wird Speicher effizient genutzt, da Kopien und Ressourcenallokation nur bei tatsächlichen Schreibzugriffen erfolgen. Dies führt zu einer beschleunigten Ausführung des Child-Prozesses.
 
-> Was geschieht, wenn einer der Prozesse eine Globalvariable modifiziert?
-
-` 🚨 answer missing `
-
 > Was geschieht bei einem Unterprogrammaufruf?
 
 Zur Ausführung des Systemcalls `exec()`, wird der komplette Adressraum des Kindes überschrieben. 
@@ -681,15 +677,9 @@ Ein "Seitenfehler" (auch bekannt als Page Fault) tritt auf, wenn ein Prozess auf
 
 ---
 
-> **Bei modernen Systemen ist die Virtualisierung schon von Haus aus im Prozessor integriert.**
-
 > Welchen zusätzlichen Hardwarebaustein braucht man, um Nested Page Tables zu unterstützten?
 
 MMU-VM
-
-> Welche Eigenschaften muss ein Peripheriegerät vorweisen, um I/O-Virtualisierung zu unterstützen?
-
-` 🚨 answer missing `
 
 ---
 
@@ -885,10 +875,7 @@ Ereignisse (Maus-Klick) -> Hardware-Interrupt -> USB-Treiber -> Window-Manager -
 
 > Hardwaregrundlagen:
 
-* Festplatte ist der meist genutzte Speicher in der Rechnertechnik
-* Besteht aus sich drehenden magnetisierbaren Scheiben
-* Drehgeschwindigkeiten liegen zwischen 5400 und 15000 U/min
-* Daten werden in Spuren und Sektoren mit i.d.Regel 512 Bytes abgelegt
+* Daten werden in Spuren und Sektoren mit idR. 512 Bytes abgelegt
 * Block-devices werden als verallgemeinerte Festplatten angesprochen
 * Anwendung muss nicht umprogrammiert werden, wenn das Speichermedium gewechselt wird
 * Dateisystem dient als Schnittstelle zwischen Anwendung und Gerätetreiber
@@ -905,8 +892,6 @@ Ereignisse (Maus-Klick) -> Hardware-Interrupt -> USB-Treiber -> Window-Manager -
 
 > FAT-Dateisystem
 
-* Verwendung in MS-DOS
-* Aufbau einer FAT-32 Partition
 * Bootsektor enthält wichtige Informationen über das Dateisystem
 * File-Allocation-Table (FAT) enthält Einträge für Cluster
 * Verkettung innerhalb der FAT ermöglicht schnelle Positionierung
