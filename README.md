@@ -1,12 +1,9 @@
 ## Virtuelle Adressierung
 
-> **Beschreiben Sie die einstufige virtuelle Adressierung.**
->
-> b) Welche Bedeutung haben die Einträge in der Page-Tabelle?
-
 ![](./assets/Screenshot%202023-06-18%20173953.png)
 
-A) 
+> Beschreiben Sie die einstufige virtuelle Adressierung.
+
 * Die Bildung der realen Adresse erfolgt in 2 Stufen.
 * Die virtuelle Adresse wird in der MMU (Memory Management Unit) in 2 Teile zerlegt.
 * Der rechte Teil (Offset) wird vorerst beiseitegelegt.
@@ -17,54 +14,73 @@ A)
 * Die Adresse der Seitentabelle wird im Steuerregister CR3 des Prozessors oder der MMU gespeichert.
 * Durch Ändern des Offset-Werts bleibt die Adressierung innerhalb derselben Seite, während sich der Wert der realen Seite ändern kann, was auf einen anderen Speicherbereich verweist.
 
-B)
+> Welche Bedeutung haben die Einträge in der Page-Tabelle?
 
 In der Page-Tabelle sind die Real-Pages drinnen, aus denen anhand des Offsets die Reelle Adresse errechnet wird.
 
 ---
 
-KEVIN
-
 > **In einem 32-Bit-System mit `4kB` großen Seiten wird die zweistufige virtuelle Adressierung eingesetzt.**
 > 
-> a) Wie viele Speicher und wie viele Tabellen braucht man mindestens für die Speichertabellen (PD, PT)
+> Wie viele Speicher und wie viele Tabellen braucht man mindestens für die Speichertabellen (PD, PT)
 > eines kleinen Programms (mit Code, Date, Heap und Stack)?
-> 
-> b) Wozu dient der TLB?
-> 
-> c) Für welche Bereiche des virtuellen Adressraums werden diese benötigt?
+
+ANSWER
+
+> Wozu dient der TLB?
+
+Der TLB (Translation Lookaside Buffer) ist ein Cache, der verwendet wird, um die Adressübersetzung bei der virtuellen Adressierung zu beschleunigen. Er enthält die kürzlich verwendeten Übersetzungseinträge (virtuelle Adresse zu physischer Adresse), um den Zugriff auf die Tabellen zu vermeiden.
+
+Wenn ein Programm eine virtuelle Adresse verwendet, schaut der Prozessor zuerst im TLB nach, ob die Übersetzung vorhanden ist. Wenn ja, wird die physische Adresse direkt aus dem TLB abgerufen. Dieser Vorgang ist viel schneller als der Zugriff auf die Tabellen im Speicher.
+
+Wenn die Übersetzung jedoch nicht im TLB vorhanden ist (ein sogenannter TLB-Miss), muss der Prozessor auf die Speichertabellen zugreifen, um die Übersetzung zu finden. In diesem Fall dauert die Adressübersetzung länger, da der Speicherzugriff zeitaufwändiger ist als der Zugriff auf den TLB.
+ 
+> Für welche Bereiche des virtuellen Adressraums werden diese benötigt?
+
+ANSWER
 
 ---
-
-KEVIN
 
 > **Virtuelle Adressierung bei 32-Bit mit `4MB` Seiten.**
 >
-> a) Wie wird die Virtuelle Adresse aufgeteilt (quantitativ)?
->
-> b) Wie "berechnet" die MMU dabei die reelle Adresse (Zeichnung)?
->
-> c) Wie wird durch die virtuelle Adressierung verhindert, dass Programme auf fremden Adressraum zugreifen?
+> Wie wird die Virtuelle Adresse aufgeteilt (quantitativ)?
+
+Bei 4MB Seiten wird dem Offset 22 Bit zugeteilt und der Page 10 Bit anstatt bei bspw. 4 KiB Seiten, wo der Offset 12 Bit und Page 20 Bit bekommt.
+
+> Wie "berechnet" die MMU dabei die reelle Adresse (Zeichnung)?
+
+ANSWER
+
+
+> Wie wird durch die virtuelle Adressierung verhindert, dass Programme auf fremden Adressraum zugreifen?
+
+ANSWER
 
 ---
-
-KEVIN
 
 > ![](./assets/SCR-20230618-ohri.png)
 > 
-> a) Beschreiben Sie, wie die reelle Adresse gebildet wird
->
-> b) Wie groß sind die Register?
->
-> c) Warum ist diese Tabellengröße gewählt? Was kann man tun, um größere Seiten hinzubekommen?
+> Beschreiben Sie, wie die reelle Adresse gebildet wird
+
+ANSWER
+
+> Wie groß sind die Register?
+
+ANSWER
+
+> (Hilfe) Warum ist diese Tabellengröße gewählt? Was kann man tun, um größere Seiten hinzubekommen?
+
+Um groessere Seiten hinzubekommen muss man den Offset vergroessern. Fuer 4MB Seiten zum Beispiel 22 Bit, fuer 4KB nur 12 Bit.
 
 ---
 
-KEVIN
+> Beschreiben Sie die Funktionsweise der virtuellen Adressierung eines 32-Bit-Prozessors mit einer Seitengröße von 4MB
 
-> a) Beschreiben Sie die Funktionsweise der virtuellen Adressierung eines 32-Bit-Prozessors mit einer Seitengröße von 4MB
->
-> b) Wie vermeidet man, dass bei jeder Speicheradressierung die vollständige Adressumsetzung erfolgen muss?
+ANSWER
+
+> Wie vermeidet man, dass bei jeder Speicheradressierung die vollständige Adressumsetzung erfolgen muss?
+
+TLB
 
 ---
 
@@ -72,22 +88,18 @@ KEVIN
 > 
 > **Gegeben sei die virtuelle Adresse `0x5678` und der Anfang der Page-Tabelle (Einstufige Adressumsetzung, Seitengröße `4kB`)**
 >
-> a) Ermitteln Sie die reelle Adresse im Hauptspeicher
->
-> b) Was geschieht, wenn dort ein Wert eingetragen wird?
+> Ermitteln Sie die reelle Adresse im Hauptspeicher
 
-a) `0x5678` -> 0x5 (Page) 0x678 (Offset). An Index 5 in der Tabelle (6. Eintrag) steht `0x1234`. Ergbnis = `0x1234` + `0x678` = `0x1234678`
+`0x5678` -> 0x5 (Page) 0x678 (Offset). An Index 5 in der Tabelle (6. Eintrag) steht `0x1234`. Ergbnis = `0x1234` + `0x678` = `0x1234678`
 
-b) P = Present (1. Spalte), W = Writable (2. Spalte). Falls (P = 0), dann existiert Tabelle nicht. Falls (W = 0), dann Tabelle nicht beschreibbar.
+> Was geschieht, wenn dort ein Wert eingetragen wird?
+
+P = Present (1. Spalte), W = Writable (2. Spalte). Falls (P = 0), dann existiert Tabelle nicht. Falls (W = 0), dann Tabelle nicht beschreibbar.
 Da bei `0x1234678` (W = 0) ist, kann dort nicht beschrieben werden. Es kommt zum Fehler.
 
 ---
 
-> a) Warum wird die einstufige virtuelle Adressierung nicht verwendet?
->
-> b) Wie arbeitet die virtuelle Adressierung tatsächlich?
-
-a)
+> Warum wird die einstufige virtuelle Adressierung nicht verwendet?
 
 0. Auch fuer kleine Anwendungen muss die komplette Tabelle erstellt werden
 1. **Begrenzter Adressraum:** Der verfügbare Adressraum ist durch die Größe der Page-Tabelle begrenzt.
@@ -96,7 +108,7 @@ a)
 4. **Feste Seitengröße:** Die Seitengröße ist oft festgelegt und kann nicht leicht geändert werden.
 5. **Potenziell längere Zugriffszeiten:** Die Adressumsetzung erfordert mehr Schritte, was zu längeren Zugriffszeiten führen kann.
 
-b) 
+> Wie arbeitet die virtuelle Adressierung tatsächlich?
 
 In echt verwendet man die Mehrstufige virtuelle Adressierung.
 
@@ -156,11 +168,7 @@ ANSWER
 
 > **Gegeben sei ein ext2-Dateisystem mit einer Blockgröße von `4kB`. Im Dateikopf seien 12 Einträge für die direkte Adressierung von Datenblöcken und 3 Einträge für die Verweise auf 1 bis 3-fach indizierte Blöcke.**
 >
-> a) Wie groß kann eine Datei werden (Berechnungsformel)
-> 
-> b) Wie kann man aus den Einträgen erkennen, in welchen Blöcken die Daten gespeichert sind (Zeichnung)? 
-
-a)
+> Wie groß kann eine Datei werden (Berechnungsformel)
 
 BS = 1KiB
 BN = 32 Bit
@@ -170,9 +178,9 @@ Anzahl Eintraege indirekte Bloecke = BS (in Bit) / BN = 1024 * 8 / 32 = 256
 Max. Groesse = Direkte * BS + Anzahl Eintraege indirekte Bloecke * BS + Anzahl Eintraege indizierte Bloecke ^ Indifizierungslevel * BS
 = 12 * 1 KiB + 256 * 1 KiB + 256^2 * 1 KiB + 256 ^ 3 * 1 KiB
 
-b)
+> Wie kann man aus den Einträgen erkennen, in welchen Blöcken die Daten gespeichert sind (Zeichnung)? 
 
-KEVIN
+ANSWER
 
 ---
 
@@ -180,23 +188,25 @@ KEVIN
 > 
 > **Ein Dateisystem sei wie im Bild aufgebaut. Die Blockgröße sei `1kB`.**
 >
-> a) Was stellt die linke Grafik dar, was die rechte?
->
-> b) Wie lange ist die Datei (erste Zeile) maximal?
->
-> c) Um welches Dateisystem handelt es sich?
->
-> d) Welche Angabe fehlt, um die genaue Dateigröße zu bestimmen?
+> Was stellt die linke Grafik dar, was die rechte?
+
+Links: Wurzelverzeichnis, Rechts: FAT
+
+> Wie lange ist die Datei (erste Zeile) maximal?
+
+3 -> 5 -> 8 -> 2 -> 9 -> 0xffff => 5 Schritte = max. 5 * 1 KiB
+
+> Um welches Dateisystem handelt es sich?
+
+FAT
+
+> Welche Angabe fehlt, um die genaue Dateigröße zu bestimmen?
+
+Das genaue Ende der Datei im Block. 1 Block wird immer verwendet, muss aber nicht ausgefuellt sein. Dadurch groesse so nicht bestimmbar.
 
 ---
 
-a) Links: Wurzelverzeichnis, Rechts: FAT
 
-b) 3 -> 5 -> 8 -> 2 -> 9 -> 0xffff => 5 Schritte = max. 5 * 1 KiB
-
-c) FAT
-
-d) Das genaue Ende der Datei im Block. 1 Block wird immer verwendet, muss aber nicht ausgefuellt sein. Dadurch groesse so nicht bestimmbar.
 
 
 
@@ -232,6 +242,9 @@ Verwendung einer Nachrichtenwarteschlange (**Message Queue**).
 
 **Pipes**
 
+* Unnamed und Named Pipes
+    * Unnamed entstehen bei Fork zwischen Vater und Kind Prozessen
+    * Named koennen zwischen allen Prozessen enstehen (Verwandschaftsgrad egal)
 * Unidirektionale Kommunikation
 * FIFO (First-In-First-Out) Datenfluss
 * Verbindung zwischen verwandten Prozessen
@@ -248,14 +261,14 @@ Verwendung einer Nachrichtenwarteschlange (**Message Queue**).
 
 ---
 
-> a) Was sind Signale?
->
-> b) Wie werden sie behandelt?
+> Was sind Signale?
 
-a) **Signale:** Signale sind Ereignisse oder Benachrichtigungen, die einem Prozess gesendet werden, um auf bestimmte Ereignisse hinzuweisen oder bestimmte Aktionen auszulösen.
+Signale sind Ereignisse oder Benachrichtigungen, die einem Prozess gesendet werden, um auf bestimmte Ereignisse hinzuweisen oder bestimmte Aktionen auszulösen.
 Sie dienen der Kommunikation und Koordination zwischen Prozessen oder zwischen dem Betriebssystem und einem Prozess.
 
-b) **Behandlung von Signalen:** Ein Prozess kann Signale empfangen und darauf reagieren, indem er Signal-Handler-Funktionen definiert.
+> Wie werden sie behandelt?
+
+Ein Prozess kann Signale empfangen und darauf reagieren, indem er Signal-Handler-Funktionen definiert.
 Der Prozess kann Signal-Handler registrieren, um auf bestimmte Signale zu reagieren und entsprechende Aktionen auszuführen.
 Es gibt verschiedene Möglichkeiten, Signale zu behandeln, einschließlich Ignorieren des Signals, Ausführen einer Standardaktion oder Ausführen einer benutzerdefinierten Aktion.
 Einige Signale können blockiert werden, um ihre Ausführung vorübergehend zu verhindern.
@@ -305,18 +318,18 @@ Wenn auf 0 wird blockiert, wenn er benutzt wird, um 1 dekrementiert, wenn nicht 
 ## Prozesse
 
 > **Was ist ein Prozess?**
->
-> b) Welche Zustände kann er einnehmen?
->
-> c) Wie gelangt er von einem Zustand in einen anderen?
 
-a) Als Prozesse bezeichnet man **Programme**, die im **Hauptspeicher** zur Ausführung kommen.
+Als Prozesse bezeichnet man **Programme**, die im **Hauptspeicher** zur Ausführung kommen.
 
 ![](./assets/Screenshot%202023-06-18%20181714.png)
 
-b) wartend, ausgelagert, bereit, ...
+> Welche Zustände kann er einnehmen?
 
-c) wartend -> ausgelagert = Auslagerung, ...
+`wartend`, `ausgelagert`, `bereit`, ...
+
+> Wie gelangt er von einem Zustand in einen anderen?
+
+`wartend` -> `ausgelagert` = `Auslagerung`, ...
 
 ---
 
@@ -361,16 +374,14 @@ c) wartend -> ausgelagert = Auslagerung, ...
 
 ---
 
-> Was sind KLTs, was sind ULTs?
-
-KLTs (Kernel-Level Threads):
+> Was sind KLTs (Kernel-Level Threads)?
 
 * KLTs werden vom Betriebssystem auf Kernenebene verwaltet.
 * Erzeugen und Verwalten von KLTs erfordert Systemcalls.
 * KLTs können blockierende Systemcalls verwenden.
 * Betriebssystem gewährt KLTs Prozessorzeit basierend auf der Scheduling-Strategie.
 
-ULTs (User-Level Threads):
+> Was sind ULTs (User-Level Threads)?
 
 * ULTs werden auf Anwendungsebene durch eine Thread-Bibliothek verwaltet.
 * ULTs sind Teil desselben Prozesses und teilen sich den Adressraum.
@@ -395,11 +406,10 @@ Bei ULT werden alle Threads als ein Prozess erkannt -> schlecht
 
 > Sie haben mehrere Threads, die ihre Ergebnisse in einer gemeinsamen Variable aufsummieren.
 > Können Sie, da die Addition kommutativ ist, auf kritische Bereiche verzichten?
-> Wenn nein, wie würden Sie das Problem lösen?
 
 Nein, auf kritische Bereiche kann nicht verzichtet werden, weil die Addition einer Zahl auf eine gemeinsame Variable und überschreiben dieser Variable nicht in einem Befehl möglich ist. Dadurch würden Inkonsistenzen entstehen. 
 
-**Wenn nein, wie würden Sie das Problem lösen?**
+> Wenn nein, wie würden Sie das Problem lösen?
 
 Ein Semaphor könnte eingesetzt werden. Dabei handelt es sich um einen im Kernel 
 befindlichen Zähler, der anzeigt, ob die gemeinsame Variable gerade in Benutzung ist 
@@ -407,15 +417,11 @@ oder nicht. Ein Prozess kann einen Semaphor belegen und freigeben.
 
 ---
 
-> a) Was sind Memory Mapped Files?
-> 
-> b) Beschreiben Sie die Funktionsweise
+> Was sind Memory Mapped Files?
 
-KEVIN
+Memory Mapped Files sind eine Technik zur Abbildung von Dateien in den Arbeitsspeicher eines Computers. Durch die Verwendung von Memory Mapped Files kann auf den Inhalt einer Datei direkt über Speicherzugriffe zugegriffen werden, ohne dass explizite Lese- oder Schreiboperationen durchgeführt werden müssen.
 
-a) Memory Mapped Files sind eine Technik zur Abbildung von Dateien in den Arbeitsspeicher eines Computers. Durch die Verwendung von Memory Mapped Files kann auf den Inhalt einer Datei direkt über Speicherzugriffe zugegriffen werden, ohne dass explizite Lese- oder Schreiboperationen durchgeführt werden müssen.
-
-b) 
+> Beschreiben Sie die Funktionsweise
 
 * Beim Aufruf `mmap()` wird ein bestimmter Ausschnitt einer Datei im virtuellen Adressraum eines Prozesses abgebildet.
 * Beim Zugriff auf den abgebildeten Speicherbereich wird ein Page Fault ausgelöst, da die Daten möglicherweise nicht im Hauptspeicher vorhanden sind.
@@ -426,11 +432,15 @@ b)
 
 ---
 
-> a) Warum führt `copy_on_write` zur beschleunigten Ausführung eines child-Prozesses nach `fork()`
->
-> b) Was geschieht, wenn einer der Prozesse eine Globalvariable modifiziert?
->
-> c) Was geschieht bei einem Unterprogrammaufruf?
+> Warum führt `copy_on_write` zur beschleunigten Ausführung eines child-Prozesses nach `fork()`
+
+ANSWER
+
+> Was geschieht, wenn einer der Prozesse eine Globalvariable modifiziert?
+
+ANSWER
+
+> Was geschieht bei einem Unterprogrammaufruf?
 
 ANSWER
 
@@ -438,35 +448,29 @@ ANSWER
 
 > **Copy-On-Write:**
 >
-> a) Was geschieht bei `fork()`?
->
-> b) Was geschieht danach beim Ausführen von `exec()`?
+> Was geschieht bei `fork()`?
+
+ANSWER
+
+> Was geschieht danach beim Ausführen von `exec()`?
 
 ANSWER
 
 ---
 
-> a) Warum wird bei Linux und Windows der Anwendungsadressraum von 4GB auf 3GB (Windows 2GB) verkleinert?
->
-> b) Welche Vorteile hat diese Maßnahme bei einem Systemcall
->
-> c) Welche Vorteile hat diese Maßnahme beim Datentransfer
-
-KEVIN
-
-a)
+> Warum wird bei Linux und Windows der Anwendungsadressraum von 4GB auf 3GB (Windows 2GB) verkleinert?
 
 * Ein Teil des Adressraums wird für das Betriebssystem reserviert, um den Kernel und seine Funktionen zu laden und auszuführen.
 * Speicherplatz für Abbildung von Systemressourcen wie Treiber wird benötigt.
 * Reduzierung des Anwendungsadressraums ermöglicht effizientere Speichernutzung und erhöht die Stabilität des Systems.
 
-b)
+> Welche Vorteile hat diese Maßnahme bei einem Systemcall
 
 * Bei einem Systemcall muss der Prozess vom Benutzermodus in den privilegierten Kernelmodus wechseln.
 * Durch die Verkleinerung des Anwendungsadressraums bleibt mehr Speicherplatz für den Kernel und die Systemfunktionen verfügbar, was den Systemcall effizienter macht.
 * Es wird weniger Speicher für den Kontextwechsel zwischen Benutzermodus und Kernelmodus benötigt, wodurch die Ausführung des Systemcalls beschleunigt wird.
 
-c)
+> Welche Vorteile hat diese Maßnahme beim Datentransfer
 
 * Beim Datentransfer zwischen Prozessen oder zwischen Prozess und Betriebssystem wird Speicherplatz benötigt, um die Daten zu kopieren.
 * Durch die Verkleinerung des Anwendungsadressraums steht mehr Speicherplatz für den Datentransfer zur Verfügung.
@@ -474,22 +478,19 @@ c)
 
 ---
 
-> a) Was ist eine Race-Condition?
->
-> b) Welche Fehler können auftreten?
->
-> c) Wie kann man diese vermeiden?
+> Was ist eine Race-Condition?
 
+Eine Race-Condition ist eine Situation, in der das Verhalten eines Programms oder Systems davon abhängt, in welcher Reihenfolge die einzelnen Threads oder Prozesse ausgeführt werden.
 
-a) Eine Race-Condition ist eine Situation, in der das Verhalten eines Programms oder Systems davon abhängt, in welcher Reihenfolge die einzelnen Threads oder Prozesse ausgeführt werden.
+> Welche Fehler können auftreten?
 
-b) Mögliche Fehler, die durch Race-Conditions auftreten können, sind:
+Mögliche Fehler, die durch Race-Conditions auftreten können, sind:
 
 * Inkonsistente oder fehlerhafte Ergebnisse aufgrund von parallelen Aktualisierungen von gemeinsam genutzten Ressourcen.
 * Deadlocks oder Blockaden, bei denen Threads oder Prozesse aufeinander warten und dadurch das System blockiert wird.
 * Datenverlust oder Datenbeschädigung durch inkonsistente Schreib- oder Leseoperationen.
 
-c) Zur Vermeidung von Race-Conditions können verschiedene Maßnahmen ergriffen werden:
+> Wie kann man diese vermeiden?
 
 * Synchronisierung: Verwendung von Mechanismen wie Mutexes (Sperren) oder Semaphoren, um den Zugriff auf gemeinsam genutzte Ressourcen zu koordinieren und sicherzustellen, dass nur ein Thread oder Prozess gleichzeitig darauf zugreift.
 * Kritische Abschnitte: Identifizierung und Kennzeichnung von kritischen Abschnitten im Code, in denen gemeinsam genutzte Ressourcen verwendet werden, und deren schützende Umrahmung mit Synchronisierungsmechanismen.
@@ -506,17 +507,15 @@ Mittlere Antwortzeit ist (3 + 8 + 13 + 22) / 4 = 11.5
 
 ---
 
-> a) Warum werden Seiten ausgelagert?
->
-> b) Was geschieht dabei?
->
-> c) Welche Strategien gibt es?
+> Warum werden Seiten ausgelagert?
 
-a) Seiten werden ausgelagert, um **Speicherplatz im Hauptspeicher freizugeben** und **Platz für andere Seiten oder Prozesse zu schaffen**. Dies geschieht, wenn der verfügbare Hauptspeicher nicht ausreicht, um alle aktiven Seiten aller laufenden Prozesse zu halten.
+Seiten werden ausgelagert, um **Speicherplatz im Hauptspeicher freizugeben** und **Platz für andere Seiten oder Prozesse zu schaffen**. Dies geschieht, wenn der verfügbare Hauptspeicher nicht ausreicht, um alle aktiven Seiten aller laufenden Prozesse zu halten.
 
-b) Beim Auslagern einer Seite wird der Inhalt dieser Seite vom Hauptspeicher auf die Festplatte oder ein anderes sekundäres Speichermedium verschoben. Dadurch wird der Speicherplatz im Hauptspeicher freigegeben, und die Seite wird als "ausgelagert" markiert. Wenn die Seite später wieder benötigt wird, kann sie vom sekundären Speicher in den Hauptspeicher zurückgeladen werden.
+> Was geschieht dabei?
 
-c) 
+Beim Auslagern einer Seite wird der Inhalt dieser Seite vom Hauptspeicher auf die Festplatte oder ein anderes sekundäres Speichermedium verschoben. Dadurch wird der Speicherplatz im Hauptspeicher freigegeben, und die Seite wird als "ausgelagert" markiert. Wenn die Seite später wieder benötigt wird, kann sie vom sekundären Speicher in den Hauptspeicher zurückgeladen werden.
+
+> Welche Strategien gibt es?
 
 **Optimal**
 
@@ -531,8 +530,8 @@ Beim Einlagern einer Seite in den Hauptspeicher wird sie mit einem Zeitstempel v
 
 Zwei Zeiger durchlaufen hintereinander mit etwas Abstand die Pages im RAM. 
 Der vordere Zeiger setzt das Access-Bit jeder Seite auf 0. Wenn auf eine Seite 
-zugegriffen wird, wird dieses Bit auf 1 gesetzt. Der hintere Zeiger prüft, ob dies 
-der Fall ist und wenn nicht, dann sorgt er dafür, dass die Seite ausgelagert wird.
+zugegriffen wird, wird dieses Bit auf 1 gesetzt. 
+Der hintere Zeiger prueft, ob das Access-Bit auf 0 gesetzt ist, ist dies der Fall, wird die Seite ausgelagert.
 
 **LRU**
 
@@ -547,23 +546,17 @@ niedrigerer Zahl können also eher ausgelagert werden.
 
 ---
 
-> a) Was ist ein "Seitenfehler"?
->
-> b) Wodurch wird er verursacht?
->
-> c) Welche grundsätzlichen Reaktionen darauf gibt es?
+> Was ist ein "Seitenfehler"?
 
-KEVIN
+Ein "Seitenfehler" (auch bekannt als Page Fault) tritt auf, wenn ein Prozess auf eine Seite im virtuellen Speicher zugreifen möchte, die sich nicht im Hauptspeicher befindet.
 
-a) Ein "Seitenfehler" (auch bekannt als Page Fault) tritt auf, wenn ein Prozess auf eine Seite im virtuellen Speicher zugreifen möchte, die sich nicht im Hauptspeicher befindet.
-
-b) Ein Seitenfehler kann aus verschiedenen Gründen verursacht werden:
+> Wodurch wird er verursacht?
 
 * Die angeforderte Seite wurde noch nicht in den Hauptspeicher geladen, da sie entweder noch nicht benötigt wurde oder zuvor ausgelagert wurde.
 * Die angeforderte Seite wurde ausgelagert, um Platz für andere Seiten oder Prozesse zu schaffen.
 * Es kann ein Fehler im Adressraum des Prozesses vorliegen, der dazu führt, dass auf ungültige Adressen zugegriffen wird.
 
-c) Bei einem Seitenfehler gibt es grundsätzlich drei Reaktionsmöglichkeiten:
+> Welche grundsätzlichen Reaktionen darauf gibt es?
 
 * Laden: Die angeforderte Seite wird vom sekundären Speicher (z. B. Festplatte) in den Hauptspeicher geladen, damit der Prozess darauf zugreifen kann. Der Prozess wird dann fortgesetzt, als ob nichts passiert wäre.
 * Austauschen: Wenn der Hauptspeicher voll ist, muss eine andere Seite ausgelagert werden, um Platz für die angeforderte Seite zu schaffen. Die ausgelagerte Seite wird auf die Festplatte verschoben, und die angeforderte Seite wird an ihre Stelle im Hauptspeicher geladen.
@@ -581,18 +574,19 @@ c) Bei einem Seitenfehler gibt es grundsätzlich drei Reaktionsmöglichkeiten:
 
 ## Virtualisierung
 
-> Was ist ein Typ-1 Hypervisor und ein Typ-2 Hypervisor?
-
-Ein Typ-1 Hypervisor und ein Typ-2 Hypervisor sind zwei verschiedene Ansätze zur Virtualisierung von Systemen.
+> Was ist ein Typ-1 Hypervisor?
 
 **Typ-1 Hypervisor (Bare-Metal Hypervisor):**
 
-* Kritische oder sensitive Instruktionen werfen eine Exception.
+* **Das Gastsystem laeuft in einer niedrigen Privilegstufte**
+    * Kritische oder sensitive Instruktionen werfen eine Exception.
     * Werden von der VMM (Virtual Machine Monitor) abgearbeitet.
 * Wird auch als "Bare-Metal Hypervisor" bezeichnet.
 * Wird direkt auf der physischen Hardware (ohne ein Host-Betriebssystem) installiert.
 * Hat direkten Zugriff auf die Hardware-Ressourcen des Systems.
 * Bietet eine hohe Leistung und Effizienz, da kein Host-Betriebssystem vorhanden ist.
+
+> Was ist ein Typ-2 Hypervisor?
 
 **Typ-2 Hypervisor (Hosted Hypervisor):**
 
@@ -626,8 +620,7 @@ Ein Typ-1 Hypervisor und ein Typ-2 Hypervisor sind zwei verschiedene Ansätze zu
 
 > Wie verhindert ein Typ-1 Hypervisor, dass ein Gastsystem direkt auf die Hardware zugreift?
 
-KEVIN
-
+* Die Privilegstufe der Gastsysteme wird heruntergesetzt
 * Er besteht aus einer Virtual Machine Monitor (VMM) Schicht, die den direkten Zugriff auf die Hardware ermöglicht.
 * Der Hypervisor kontrolliert den Zugriff auf die physischen Ressourcen wie Prozessor, Speicher, Netzwerk und Speichermedien.
 * Er stellt eine virtuelle Umgebung für die Gastsysteme bereit, in der sie ausgeführt werden können.
@@ -638,8 +631,6 @@ KEVIN
 
 > Wie verhindert ein Typ-2 Hypervisor, dass ein Gastsystem direkt auf die Hardware zugreift?
 
-KEVIN
-
 * Er greift nicht direkt auf die physische Hardware zu, sondern nutzt die Treiber und Schnittstellen des Host-Betriebssystems.
 * Der Hypervisor arbeitet als Schicht zwischen dem Host-Betriebssystem und den Gastsystemen.
 * Der Host-Betriebssystem kontrolliert den Zugriff auf die Hardware-Ressourcen und stellt sie dem Hypervisor zur Verfügung.
@@ -649,12 +640,12 @@ KEVIN
 ---
 
 > **Bei modernen Systemen ist die Virtualisierung schon von Haus aus im Prozessor integriert.**
->
-> a) Welchen zusätzlichen Hardwarebaustein braucht man, um Nested Page Tables zu unterstützten?
->
-> b) Welche Eigenschaften msus ein Peripheriegerät vorweisen, um IO-Virtualisierung zu unterstützen?
 
-KEVIN
+> Welchen zusätzlichen Hardwarebaustein braucht man, um Nested Page Tables zu unterstützten?
+
+MMU-VM
+
+> Welche Eigenschaften muss ein Peripheriegerät vorweisen, um IO-Virtualisierung zu unterstützen?
 
 ANSWER
 
@@ -700,22 +691,11 @@ ANSWER
 ## Systemaufrufe
 
 > **Erklären Sie die Funktion und Wirkungsweise folgender System-Calls:**
->
-> a) `fork()`
->
-> b) `exec()`
->
-> c) `wait()`
->
-> d) `exit()`
 
-a) `fork()`: Erzeugt einen neuen Prozess, der eine exakte Kopie des aufrufenden Prozesses ist. Der neue Prozess, auch Kindprozess genannt, erhält eine eindeutige Prozesskennung (PID) und eine Kopie des Adressraums, der Dateideskriptoren und anderer Ressourcen des Elternprozesses.
-
-b) `exec()`: Startet ein neues Programm in einem Prozess, indem der aktuelle Programmcode durch den Code des neuen Programms ersetzt wird.
-
-c) `wait()`: Blockiert den Elternprozess und wartet auf die Beendigung eines oder mehrerer Kindprozesse. Der Aufruf von `wait()` ermöglicht es dem Elternprozess, auf den Abschluss der Ausführung seiner Kindprozesse zu warten, bevor er selbst fortfährt.
-
-d) `exit()`: Beendet den aktuellen Prozess und gibt Ressourcen frei. Optional kann ein Beendigungsstatus übergeben werden.
+* `fork()`: Erzeugt einen neuen Prozess, der eine exakte Kopie des aufrufenden Prozesses ist. Der neue Prozess, auch Kindprozess genannt, erhält eine eindeutige Prozesskennung (PID) und eine Kopie des Adressraums, der Dateideskriptoren und anderer Ressourcen des Elternprozesses.
+* `wait()`: Blockiert den Elternprozess und wartet auf die Beendigung eines oder mehrerer Kindprozesse. Der Aufruf von `wait()` ermöglicht es dem Elternprozess, auf den Abschluss der Ausführung seiner Kindprozesse zu warten, bevor er selbst fortfährt.
+* `exit()`: Beendet den aktuellen Prozess und gibt Ressourcen frei. Optional kann ein Beendigungsstatus übergeben werden.
+* `exec()`: Startet ein neues Programm in einem Prozess, indem der aktuelle Programmcode durch den Code des neuen Programms ersetzt wird.
 
 ---
 
@@ -727,16 +707,12 @@ System-Calls werden durch Interrupts realisiert. Dazu wechselt eine Anwendung mi
 
 > Wozu dienen Interrupts ausgelöst durch Hardware?
 
-KEVIN
-
 * Behandlung von Hardwareereignissen: Hardware-Interrupts werden von physischen Geräten, wie z.B. Tastaturen, Mäusen, Netzwerkkarten oder Timern, ausgelöst. Sie signalisieren dem Prozessor, dass eine bestimmte Aktion oder ein Ereignis eingetreten ist, das Aufmerksamkeit erfordert.
 * Echtzeitverarbeitung: Hardware-Interrupts ermöglichen es dem System, auf zeitkritische Ereignisse sofort zu reagieren. Beispielsweise kann ein Interrupt ausgelöst werden, wenn ein Netzwerkpaket eingetroffen ist, um es schnell zu verarbeiten und zu reagieren.
 
 ---
 
 > Wozu dienen Interrupts ausgelöst durch Software?
-
-KEVIN
 
 * Betriebssystemsteuerung: Software-Interrupts, auch als Trap oder Software Trap bezeichnet, werden vom Betriebssystem selbst oder von Anwendungen ausgelöst, um eine bestimmte Funktion im Betriebssystem auszuführen. Sie dienen dazu, vom Benutzer angeforderte Systemdienste oder Betriebssystemfunktionen zu aktivieren, z.B. das Öffnen einer Datei oder das Ausführen eines bestimmten Befehls.
 * Synchronisation und Koordination: Software-Interrupts werden auch verwendet, um die Kommunikation und Koordination zwischen verschiedenen Prozessen oder Threads innerhalb des Systems zu ermöglichen. Sie können dazu verwendet werden, Signale oder Ereignisse zu senden, um auf bestimmte Bedingungen zu warten oder um eine asynchrone Kommunikation zwischen verschiedenen Teilen des Systems zu ermöglichen.
@@ -775,23 +751,14 @@ Zusammen bilden die Major- und Minor-Numbers eine eindeutige Kennung für ein Ge
 
 ---
 
-> Was sind 
-> 
-> a) Block-Devices
-> 
-> b) Character Devices?
-
-KEVIN
-
-a)
+> Was sind Block-Devices?
 
 * Block-Geräte sind Geräte, die Daten in Blöcken (festgelegte Datenmengen) verarbeiten.
 * Sie ermöglichen den zufälligen Zugriff auf Datenblöcke und unterstützen Lese- und Schreibvorgänge in größeren Einheiten.
 * Typische Beispiele für Block-Geräte sind Festplatten, Solid-State-Laufwerke (SSDs) und CD/DVD-Laufwerke.
 * Block-Geräte werden normalerweise zur Speicherung und Übertragung großer Datenmengen verwendet.
 
-
-b)
+> Character Devices?
 
 * Character-Geräte sind Geräte, die Daten zeichenweise verarbeiten.
 * Sie ermöglichen den sequenziellen Zugriff auf Daten, d.h. die Daten werden in der Reihenfolge ihres Eintreffens verarbeitet.
@@ -847,6 +814,15 @@ Ereignisse (Maus-Klick) -> Hardware-Interrupt -> USB-Treiber -> Window-Manager -
 
 ---
 
-> a) Wie wird Shared Memory realisiert?
->
-> b) Wozu wird es verwendet?
+> Wie wird Shared Memory realisiert?
+
+* Das Reservieren eines gemeinsamen Speicherbereichs im Hauptspeicher des Computers
+* Das Zuweisen dieses Speicherbereichs an mehrere Prozesse
+* Die Prozesse können dann direkt auf den gemeinsamen Speicherbereich zugreifen und Daten austauschen, ohne Daten zwischen den Prozessen kopieren zu müssen.
+
+> Wozu wird es verwendet?
+
+* Effizienten und schnellen Datenaustausch zwischen Prozessen
+* Gemeinsame Nutzung großer Datenmengen ohne Datenkopien
+* Kommunikation und Synchronisation zwischen Prozessen in Multithreaded- und Mehrprozessorsystemen
+* Implementierung von IPC (Inter-Process Communication)-Mechanismen wie Pipes, Message Queues und Semaphoren.
