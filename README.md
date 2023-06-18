@@ -4,7 +4,7 @@
 
 > Beschreiben Sie die einstufige virtuelle Adressierung.
 
-* Die Bildung der realen Adresse erfolgt in 2 Stufen.
+* Die Bildung der realen Adresse erfolgt in 2 Schritten.
 * Die virtuelle Adresse wird in der MMU (Memory Management Unit) in 2 Teile zerlegt.
 * Der rechte Teil (Offset) wird vorerst beiseitegelegt.
 * Der linke Teil (Page) wird als Index in der Seitentabelle verwendet.
@@ -25,7 +25,25 @@ In der Page-Tabelle sind die Real-Pages drinnen, aus denen anhand des Offsets di
 > Wie viele Speicher und wie viele Tabellen braucht man mindestens für die Speichertabellen (PD, PT)
 > eines kleinen Programms (mit Code, Date, Heap und Stack)?
 
-` 🚨 answer missing `
+```
+2 PT, 1 PD (kleines Programm)
+
+32 Bit -> 10 PD, 10 PT, 12 Offset
+
+2^10 = 1024 Eintraege in dem PD
+Jeder der Eintraege hat 32 Bit
+
+=> Insgesamt 1024 * 32 Bit = 4 KiB
+
+2^10 = 1024 Eintraege in der PT (= 4 KiB)
+
+=> Insgesamt 4 KiB (PD) + 2 * 4 KiB (PT) = 12 KiB fuer die Tabellen
+
+Falls fuer Code noch Speicher, dann noch `4 * 4 KiB` (4 KiB pro Page)
+evtl. `2 * 4` KiB falls Daten, Code und Heap in ein Page kann
+
+=> Insgesamt Insgesamt 28 KiB
+```
 
 > Wozu dient der TLB?
 
@@ -37,7 +55,8 @@ Wenn die Übersetzung jedoch nicht im TLB vorhanden ist (ein sogenannter TLB-Mis
  
 > Für welche Bereiche des virtuellen Adressraums werden diese benötigt?
 
-` 🚨 answer missing `
+Daten, Code und Heap liegen am Anfang des v. A. Stack an Ende.
+Deswegen wird fuer den Anfang und fuer das Ende ein PT gebraucht, welche beide im PD zu finden sind, welcher den gesamten virtuellen Adressraum abbildet.
 
 ---
 
@@ -48,13 +67,17 @@ Wenn die Übersetzung jedoch nicht im TLB vorhanden ist (ein sogenannter TLB-Mis
 Bei 4MB Seiten wird dem Offset 22 Bit zugeteilt und der Page 10 Bit anstatt bei bspw. 4 KiB Seiten, wo der Offset 12 Bit und Page 20 Bit bekommt.
 
 > Wie "berechnet" die MMU dabei die reelle Adresse (Zeichnung)?
+> **od.:** Beschreiben Sie die Funktionsweise der virtuellen Adressierung eines 32-Bit-Prozessors mit einer Seitengröße von 4MB
 
-` 🚨 answer missing `
-
+![](./assets/Screenshot%202023-06-18%20213555.png)
 
 > Wie wird durch die virtuelle Adressierung verhindert, dass Programme auf fremden Adressraum zugreifen?
 
-` 🚨 answer missing `
+Anhand des P und W Bits. Ist (P = 0) oder (W = 0), so wird eine Exception ausgeloest. Dadurch wird die Anwendung unterbrochen.
+
+> Wie vermeidet man, dass bei jeder Speicheradressierung die vollständige Adressumsetzung erfolgen muss?
+
+TLB
 
 ---
 
@@ -62,25 +85,27 @@ Bei 4MB Seiten wird dem Offset 22 Bit zugeteilt und der Page 10 Bit anstatt bei 
 > 
 > Beschreiben Sie, wie die reelle Adresse gebildet wird
 
-` 🚨 answer missing `
+Gleich wie bei der zweistufigen, nur mit 4 Stufen.
+
+* PM schaut in PMLE Tabelle nach naechsten Wert, dieser referenziert auf PDPE Tabelle (fuer jeden Eintrag gibt es eine Tabelle)
+* gleiches Spiel in dieser PDPE Tabelle
+* gleiches Spiel in dieser PDE Tabelle
+* gleiches Spiel in dieser PTE Tabelle
+* Eintrag der PTE Tabelle mit Offset zusammenrechnen
+* Erhaelt reelle Adresse
 
 > Wie groß sind die Register?
 
-` 🚨 answer missing `
+* 2^9 Eintraege pro Tabelle
+* (falls ein Eintrag 64 Bit gross ist, dann 2 ^ 9 * 64 Bit (= 512*64/8 Bytes = 4 KiB)) | HILFE
 
-> (Hilfe) Warum ist diese Tabellengröße gewählt? Was kann man tun, um größere Seiten hinzubekommen?
+> Warum ist diese Tabellengröße gewählt? Was kann man tun, um größere Seiten hinzubekommen?
 
-Um groessere Seiten hinzubekommen muss man den Offset vergroessern. Fuer 4MB Seiten zum Beispiel 22 Bit, fuer 4KB nur 12 Bit.
+Optimum aus Zugriffzeiten bei Miss und Speicherbedarf.
+Bei invalidem Eintrag (P = 0) kann man sich die folgenden Tabellen sparen.
 
----
-
-> Beschreiben Sie die Funktionsweise der virtuellen Adressierung eines 32-Bit-Prozessors mit einer Seitengröße von 4MB
-
-` 🚨 answer missing `
-
-> Wie vermeidet man, dass bei jeder Speicheradressierung die vollständige Adressumsetzung erfolgen muss?
-
-TLB
+Um groessere Seiten hinzubekommen muss man die Tabellen verkleinern und den Offset vergroessern. 
+Fuer 4 MB Seiten zum Beispiel 22 Bit Offset, fuer 4 KB nur 12 Bit Offset.
 
 ---
 
@@ -95,25 +120,19 @@ TLB
 > Was geschieht, wenn dort ein Wert eingetragen wird?
 
 P = Present (1. Spalte), W = Writable (2. Spalte). Falls (P = 0), dann existiert Tabelle nicht. Falls (W = 0), dann Tabelle nicht beschreibbar.
-Da bei `0x1234678` (W = 0) ist, kann dort nicht beschrieben werden. Es kommt zum Fehler.
+Da bei `0x1234678` (W = 0) ist, kann dort nicht beschrieben werden. Es wird eine Exception geworfen.
 
 ---
 
 > Warum wird die einstufige virtuelle Adressierung nicht verwendet?
 
-0. Auch fuer kleine Anwendungen muss die komplette Tabelle erstellt werden
-1. **Begrenzter Adressraum:** Der verfügbare Adressraum ist durch die Größe der Page-Tabelle begrenzt.
-2. **Verwaltungsaufwand:** Die Verwaltung einer einzigen großen Tabelle ist zeitaufwändig und kann die Systemleistung beeinträchtigen.
-3. **Geringe Flexibilität:** Es gibt weniger Flexibilität bei der Speicherverwaltung im Vergleich zu mehrstufigen Adressierungsschemata.
-4. **Feste Seitengröße:** Die Seitengröße ist oft festgelegt und kann nicht leicht geändert werden.
-5. **Potenziell längere Zugriffszeiten:** Die Adressumsetzung erfordert mehr Schritte, was zu längeren Zugriffszeiten führen kann.
+Auch fuer kleine Anwendungen muss die komplette Tabelle erstellt werden. Dadurch gibt es einen sehr hohen Speicheraufwand.
 
 > Wie arbeitet die virtuelle Adressierung tatsächlich?
 
 In echt verwendet man die Mehrstufige virtuelle Adressierung.
 
-Bei der mehrstufigen virtuellen Adressierung wird die virtuelle Adresse in mehrere Teile aufgeteilt und durch mehrere Tabellenstufen geleitet, um die physische Adresse zu bestimmen. Der Index jeder Tabelle wird verwendet, um den Eintrag in der nächsten Tabelle zu finden, bis schließlich die physische Adresse erreicht wird. Dies ermöglicht eine effiziente Nutzung des virtuellen Adressraums und eine flexiblere Speicherverwaltung.
-
+Bei der mehrstufigen virtuellen Adressierung wird die virtuelle Adresse in mehrere Teile aufgeteilt und durch mehrere Tabellenstufen geleitet, um die physische Adresse zu bestimmen. Der Index jeder Tabelle wird verwendet, um den Eintrag in der nächsten Tabelle zu finden, bis schließlich die physische Adresse erreicht wird (anhand von Kombination mit Offset). Dies ermöglicht eine effiziente Nutzung des virtuellen Adressraums und eine flexiblere Speicherverwaltung.
 
 ---
 
@@ -154,33 +173,38 @@ Bei der mehrstufigen virtuellen Adressierung wird die virtuelle Adresse in mehre
 
 ---
 
-> [ext4] Warum kann ext4 mit Extents größere Partitionen verwalten als ohne Extents
+> `[ext4]` Warum kann ext4 mit Extents größere Partitionen verwalten als ohne Extents
 
 ` 🚨 answer missing `
 
 ---
 
-> [ext4] Wie groß kann eine Datei werden (Blockgröße 4kB, Rechenweg)
+> `[ext4]` Wie groß kann eine Datei werden (Blockgröße 4 KiB, Rechenweg)
 
-` 🚨 answer missing `
+```
+BN = 32 Bit (immer bei ext4)
+Pro Datei = 2^32 Bloecke
+BS = 4 KiB
+Max. Datei = Anz. Bloecke * BS
+           = 2^32 * 4 KiB = 16 TB
+```
 
 ---
 
-> **Gegeben sei ein ext2-Dateisystem mit einer Blockgröße von `4kB`. Im Dateikopf seien 12 Einträge für die direkte Adressierung von Datenblöcken und 3 Einträge für die Verweise auf 1 bis 3-fach indizierte Blöcke.**
+> **Gegeben sei ein ext2-Dateisystem mit einer Blockgröße von `4 KiB`.
+> Im Dateikopf seien 12 Einträge für die direkte Adressierung von Datenblöcken und 3 Einträge für die Verweise auf 1 bis 3-fach indizierte Blöcke.**
 >
 > Wie groß kann eine Datei werden (Berechnungsformel)
 
-BS = 1KiB
-BN = 32 Bit
+```
+BS = 1 KiB
+BN = 32 Bit (immer bei ext2)
 
 Anzahl Eintraege indirekte Bloecke = BS (in Bit) / BN = 1024 * 8 / 32 = 256
 
-Max. Groesse = Direkte * BS + Anzahl Eintraege indirekte Bloecke * BS + Anzahl Eintraege indizierte Bloecke ^ Indifizierungslevel * BS
-= 12 * 1 KiB + 256 * 1 KiB + 256^2 * 1 KiB + 256 ^ 3 * 1 KiB
-
-> Wie kann man aus den Einträgen erkennen, in welchen Blöcken die Daten gespeichert sind (Zeichnung)? 
-
-` 🚨 answer missing `
+Max. Groesse = Direkte * BS + Anzahl Eintraege indirekte Bloecke ^ Indizierungslevel * BS
+Max. Groesse = 12 * 1 KiB + 256 * 1 KiB + 256^2 * 1 KiB + 256 ^ 3 * 1 KiB
+```
 
 ---
 
@@ -198,11 +222,12 @@ Links: Wurzelverzeichnis, Rechts: FAT
 
 > Um welches Dateisystem handelt es sich?
 
-FAT
+FAT16 (weil 0xffff = 16 Bit)
 
 > Welche Angabe fehlt, um die genaue Dateigröße zu bestimmen?
 
 Das genaue Ende der Datei im Block. 1 Block wird immer verwendet, muss aber nicht ausgefuellt sein. Dadurch groesse so nicht bestimmbar.
+Wir braeuchten noch aus den Meta Daten die Groesse.
 
 ---
 
@@ -432,9 +457,11 @@ Memory Mapped Files sind eine Technik zur Abbildung von Dateien in den Arbeitssp
 
 ---
 
-> Warum führt `copy_on_write` zur beschleunigten Ausführung eines child-Prozesses nach `fork()`
+**Copy-On-Write:**
 
-` 🚨 answer missing `
+> Warum führt `copy_on_write` zur beschleunigten Ausführung eines Child-Prozesses nach `fork()`
+
+Die beschleunigte Ausführung eines Child-Prozesses nach `fork()` wird durch die Copy-on-Write-Strategie ermöglicht. Dabei greifen beide Prozesse über ihre Pagetable, es gibt zwei, auf den gleichen Anwendungsadressraum zu. Die Einträge in der Pagetable sind schreibgeschützt (W = 0). Wenn einer der Prozesse schreiben möchte, wird eine Exception ausgelöst, woraufhin die Page kopiert und der Schreibschutz der entsprechenden Eintraegen der Pagetable entfernt wird. Dadurch wird Speicher effizient genutzt, da Kopien und Ressourcenallokation nur bei tatsächlichen Schreibzugriffen erfolgen. Dies führt zu einer beschleunigten Ausführung des Child-Prozesses.
 
 > Was geschieht, wenn einer der Prozesse eine Globalvariable modifiziert?
 
@@ -442,19 +469,8 @@ Memory Mapped Files sind eine Technik zur Abbildung von Dateien in den Arbeitssp
 
 > Was geschieht bei einem Unterprogrammaufruf?
 
-` 🚨 answer missing `
-
----
-
-> **Copy-On-Write:**
->
-> Was geschieht bei `fork()`?
-
-` 🚨 answer missing `
-
-> Was geschieht danach beim Ausführen von `exec()`?
-
-` 🚨 answer missing `
+Zur Ausführung des Systemcalls `exec()`, wird der komplette Adressraum des Kindes überschrieben. 
+Dann muss der vollständige neue Adressraum gebildet werden, bzw. bildet er sich durch Demand Paging auch wieder nur im benötigten Umfang neu.
 
 ---
 
