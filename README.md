@@ -145,37 +145,62 @@ Bei der mehrstufigen virtuellen Adressierung wird die virtuelle Adresse in mehre
 
 > Funktionsweise ext4
 
-` 🚨 answer missing `
+* ext4 ist ein Linux-Dateisystem, das auf dem ext2-Dateisystem basiert und erweitert wurde.
+* Es verwendet Inodes zur Verwaltung von Dateien und Verzeichnissen.
+* Die Dateien werden in Datenblöcken auf der Festplatte gespeichert.
+* Es unterstützt Dateinamen mit bis zu 255 Zeichen und Pfadlängen von bis zu 4096 Zeichen.
+* Es bietet erweiterte Funktionen wie Journaling, erweiterte Zugriffskontrolle und erweiterte Zeitstempelung.
 
 ---
 
 > Funktionsweise ext2
 
-` 🚨 answer missing `
+* ext2 ist ein Linux-Dateisystem, das auf dem älteren ext-Dateisystem basiert.
+* Es verwendet Inodes zur Verwaltung von Dateien und Verzeichnissen.
+* Die Dateien werden in Datenblöcken auf der Festplatte gespeichert.
+* Es unterstützt Dateinamen mit bis zu 255 Zeichen und Pfadlängen von bis zu 4096 Zeichen.
+* Es bietet grundlegende Funktionen wie Lese- und Schreibzugriff auf Dateien und Verzeichnisse.
 
 ---
 
 > Funktionsweise FAT
 
-` 🚨 answer missing `
+* FAT steht für File Allocation Table und ist ein Dateisystem, das ursprünglich in MS-DOS verwendet wurde.
+* Es verwendet eine Verkettungsmethode, bei der die Dateien in aufeinanderfolgenden Blöcken auf dem Datenträger gespeichert werden.
+* Die Verknüpfungsinformationen werden in der FAT-Tabelle gespeichert, die den Zugriff auf die Datenblöcke ermöglicht.
+* Es unterstützt kurze Dateinamen im 8.3-Format (8 Zeichen für den Dateinamen und 3 Zeichen für die Dateierweiterung).
+* Es ist einfacher aufgebaut als ext2 und bietet weniger erweiterte Funktionen.
 
 ---
 
 > [ext4] Beschreiben Sie den Aufbau des Dateisystems `ext4`
 
-` 🚨 answer missing `
+* Ext4 besteht aus Bootsektor, Superblock, Inodes, Datenblöcken und Journal.
+* Der Bootsektor enthält den Startcode und Informationen über die Partition.
+* Der Superblock enthält wichtige Informationen über das Dateisystem, wie die Größe der Partition, die Blockgröße und die Anzahl der Inodes.
+* Inodes speichern Metadaten von Dateien und Verzeichnissen, wie Dateigröße, Berechtigungen und Zugriffszeiten.
+* Datenblöcke enthalten die tatsächlichen Dateidaten.
+* Das Journal protokolliert Änderungen, um Datenkonsistenz und schnelle Wiederherstellung nach einem Systemabsturz zu gewährleisten.
 
 ---
 
 > [ext4] Beschreiben Sie die Funktionsweise des ext4-Dateisystems mit Extents
 
-` 🚨 answer missing `
+* Ext4 verwendet Extents, um die Dateispeicherung effizienter zu machen.
+* Ein Extent ist ein zusammenhängender Bereich von Blöcken auf der Festplatte, der eine Datei repräsentiert.
+* Anstatt einzelne Blöcke für jeden Teil einer Datei zu verketten, werden die Daten in aufeinanderfolgenden Extents gespeichert.
+* Dadurch wird die Anzahl der Zugriffe auf die Festplatte reduziert und die Leistung verbessert.
+* Ext4 verwendet eine Baumstruktur variabler Tiefe, um die Extents zu verwalten und auf sie zuzugreifen.
 
 ---
 
 > `[ext4]` Warum kann ext4 mit Extents größere Partitionen verwalten als ohne Extents
 
-` 🚨 answer missing `
+* Durch die Verwendung von Extents kann ext4 größere Partitionen verwalten, da sie effizienter mit dem Speicherplatz umgehen.
+* Ohne Extents müsste ext4 jeden Block einer Datei einzeln verketten, was zu einem höheren Overhead führen würde.
+* Mit Extents werden zusammenhängende Bereiche von Blöcken genutzt, um Dateien zu repräsentieren, was die Verwaltung großer Partitionen erleichtert.
+* Die Nutzung von Extents reduziert den Speicherplatzbedarf für die Verwaltung der Dateistruktur und ermöglicht es ext4, mehr Speicherplatz für die eigentlichen Dateidaten zu verwenden.
+* Dadurch können größere Partitionen effizienter genutzt werden.
 
 ---
 
@@ -843,3 +868,64 @@ Ereignisse (Maus-Klick) -> Hardware-Interrupt -> USB-Treiber -> Window-Manager -
 * Gemeinsame Nutzung großer Datenmengen ohne Datenkopien
 * Kommunikation und Synchronisation zwischen Prozessen in Multithreaded- und Mehrprozessorsystemen
 * Implementierung von IPC (Inter-Process Communication)-Mechanismen wie Pipes, Message Queues und Semaphoren.
+
+---
+
+> Other
+
+![](./assets/arrows.png)
+
+
+> Charakteristiken der Dateinutzung:
+
+* Dateien sind meist klein (wenige KByte)
+* Dateien werden häufig gelesen, selten geschrieben und kaum gelöscht
+* Zugriffsschutz ist wichtig, da Dateien von mehreren Benutzern genutzt werden
+* Gleichzeitige Benutzung einer Datei durch mehrere Benutzer ist selten und erfordert Synchronisation
+
+> Hardwaregrundlagen:
+
+* Festplatte ist der meist genutzte Speicher in der Rechnertechnik
+* Besteht aus sich drehenden magnetisierbaren Scheiben
+* Drehgeschwindigkeiten liegen zwischen 5400 und 15000 U/min
+* Daten werden in Spuren und Sektoren mit i.d.Regel 512 Bytes abgelegt
+* Block-devices werden als verallgemeinerte Festplatten angesprochen
+* Anwendung muss nicht umprogrammiert werden, wenn das Speichermedium gewechselt wird
+* Dateisystem dient als Schnittstelle zwischen Anwendung und Gerätetreiber
+* Festplattenkapazitäten reichen von 300 GB bis ca. 8 TByte
+* Transfers erfolgen in ganzen Sektoren (512 Byte oder zunehmend 4096 Byte)
+
+---
+
+> Aufbau eines einfachen Dateisystems:
+
+* Einfachste Methode: Aufeinander folgende Blöcke für Dateien nutzen
+* Probleme bei Löschung oder Verlängerung von Dateien
+* Geeignet für einmalige oder Ganze-Speicherung (z.B. CD-ROMs)
+
+> FAT-Dateisystem
+
+* Verwendung in MS-DOS
+* Aufbau einer FAT-32 Partition
+* Bootsektor enthält wichtige Informationen über das Dateisystem
+* File-Allocation-Table (FAT) enthält Einträge für Cluster
+* Verkettung innerhalb der FAT ermöglicht schnelle Positionierung
+* Wurzelverzeichnis speichert Dateiköpfe und Verweise auf Datenblöcke
+
+> Indexbasierte Dateisysteme, Beispiel Ext2:
+
+* Aufteilung der Partition in Block-Groups
+* Verwaltungsinformationen nahe bei den Daten
+* Inodes verwalten Dateien und Verzeichnisse
+* Verzeichniseinträge enthalten Verweise auf Inodes
+* Verwendung von Hardlinks innerhalb einer Partition
+* Soft-Links für Verweise über Partitionsgrenzen hinweg
+
+> Ext4:
+
+* Kompatibilität zu Ext2, aber mit Erweiterungen
+* Einführung von Extents für variable Blockbereiche
+* Baumstruktur für Adressierung der Extents
+* Inodes enthalten Extent-Header und Verweise
+* Größere Blocknummern und genauere Zeitstempel möglich
+* Verwaltung des freien Speicherbereichs mit dem Buddy-System
